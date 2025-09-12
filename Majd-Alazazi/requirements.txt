@@ -1,0 +1,7 @@
+tensorflow==2.16.1
+tensorflow_cpu==2.20.0
+keras>=3.11.3
+numpy>=1.26.4
+opencv-python>=4.11.0.86
+pillow>=11.3.0
+gradio>=5.44.1
