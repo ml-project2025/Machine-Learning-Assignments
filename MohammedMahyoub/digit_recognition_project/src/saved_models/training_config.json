@@ -1,0 +1,7 @@
+{
+    "learning_rate": 0.001,
+    "model_type": "ImprovedDigitCNN",
+    "device": "cpu",
+    "timestamp": "2025-09-05T22:34:50.476003",
+    "best_accuracy": 99.25
+}
