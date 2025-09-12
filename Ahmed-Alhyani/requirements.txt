@@ -1,0 +1,7 @@
+numpy>=1.24
+matplotlib>=3.7
+opencv-python>=4.8
+scikit-learn>=1.3
+tensorflow>=2.14
+warnings
+tqdm>=4.66
