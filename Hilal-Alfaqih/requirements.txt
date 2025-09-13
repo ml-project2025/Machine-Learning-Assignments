@@ -1,0 +1,5 @@
+tensorflow
+PIL
+numpy
+matplotlib
+tkinter
