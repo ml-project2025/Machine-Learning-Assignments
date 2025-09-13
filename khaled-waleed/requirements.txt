@@ -1,0 +1,4 @@
+easyocr
+pandas
+numpy
+matplotlib
