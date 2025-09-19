@@ -1,1 +1,0 @@
-# Extract-numbers-from-images-machine-learning
