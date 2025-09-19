@@ -1,0 +1,169 @@
+mkdir templates
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>التعرف على الأرقام</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+        }
+        .upload-form {
+            margin: 20px 0;
+        }
+        .result {
+            margin-top: 20px;
+        }
+        #preview {
+            max-width: 280px;
+            margin: 20px auto;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .probabilities {
+            margin-top: 20px;
+            text-align: left;
+            max-width: 300px;
+            margin: 20px auto;
+        }
+        .probability-bar {
+            background: #f0f0f0;
+            border-radius: 5px;
+            margin: 5px 0;
+            overflow: hidden;
+        }
+        .probability-fill {
+            background: #4caf50;
+            height: 20px;
+            text-align: right;
+            padding-right: 10px;
+            color: white;
+            line-height: 20px;
+        }
+        .loading {
+            display: none;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>نظام التعرف على الأرقام من الصور</h1>
+        
+        <form class="upload-form" id="uploadForm" enctype="multipart/form-data">
+            <input type="file" id="fileInput" accept="image/*" required>
+            <button type="submit">تحميل وتوقع</button>
+        </form>
+        
+        <div class="loading" id="loading">
+            جاري معالجة الصورة...
+        </div>
+        
+        <div class="result" id="result" style="display: none;">
+            <h2>نتيجة التوقع</h2>
+            <div id="predictionResult"></div>
+            <img id="preview" src="" alt="Processed Image">
+            
+            <div class="probabilities">
+                <h3>الاحتمالات:</h3>
+                <div id="probabilitiesList"></div>
+            </div>
+        </div>
+        
+        <div id="error" style="color: red; display: none;"></div>
+    </div>
+
+    <script>
+        document.getElementById('uploadForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const fileInput = document.getElementById('fileInput');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                showError('يرجى اختيار صورة أولاً');
+                return;
+            }
+            
+            const formData = new FormData();
+            formData.append('file', file);
+            
+            // إظهار رسالة التحميل
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('result').style.display = 'none';
+            document.getElementById('error').style.display = 'none';
+            
+            fetch('/predict', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('loading').style.display = 'none';
+                
+                if (data.error) {
+                    showError(data.error);
+                    return;
+                }
+                
+                // عرض النتيجة
+                document.getElementById('predictionResult').innerHTML = `
+                    <h3>الرقم المتوقع: ${data.prediction}</h3>
+                    <p>مستوى الثقة: ${(data.confidence * 100).toFixed(2)}%</p>
+                `;
+                
+                // عرض الصورة المعالجة
+                document.getElementById('preview').src = data.image;
+                
+                // عرض الاحتمالات
+                const probabilitiesList = document.getElementById('probabilitiesList');
+                probabilitiesList.innerHTML = '';
+                
+                data.probabilities.forEach(item => {
+                    const percentage = (item.probability * 100).toFixed(2);
+                    const barWidth = percentage + '%';
+                    
+                    const bar = document.createElement('div');
+                    bar.className = 'probability-bar';
+                    bar.innerHTML = `
+                        <div>${item.class}:</div>
+                        <div class="probability-fill" style="width: ${barWidth}">
+                            ${percentage}%
+                        </div>
+                    `;
+                    
+                    probabilitiesList.appendChild(bar);
+                });
+                
+                document.getElementById('result').style.display = 'block';
+            })
+            .catch(error => {
+                document.getElementById('loading').style.display = 'none';
+                showError('حدث خطأ أثناء معالجة الصورة: ' + error.message);
+            });
+        });
+        
+        function showError(message) {
+            const errorDiv = document.getElementById('error');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
