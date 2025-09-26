@@ -1,0 +1,47 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+build/
+develop-eggs/
+dist/
+eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.orig
+*.rej
+.*swp
+.DS_Store
+.env
+venv/
+env/
+.venv/
+ENV/
+.idea/
+.vscode/
+
+# Jupyter
+.ipynb_checkpoints
+
+# Data files (if applicable)
+*.csv
+*.json
+*.h5
+*.pt
+*.pth
+*.bin
+*.pkl
+*.npy
+*.npz
+*.hdf5
+*.png

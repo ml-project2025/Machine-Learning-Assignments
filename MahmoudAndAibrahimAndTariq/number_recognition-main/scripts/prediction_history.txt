@@ -1,0 +1,5 @@
+b35d8aa357e3c5f4a0f0a545cd5fa2fc.png	1	0.7118
+img_98.png	0	0.5664
+img_149.png	1	0.9833
+img_180.png	1	0.9735
+img_321.png	1	0.9767
